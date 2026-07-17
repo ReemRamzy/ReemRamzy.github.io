@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", monospace;
+  --color-ink-950: #050815;
+  --color-ink-900: #090e1d;
+  --color-ink-800: #11182b;
+  --color-electric-400: #60a5fa;
+  --color-electric-500: #3b82f6;
+  --color-cyan-400: #22d3ee;
+  --color-violet-400: #a78bfa;
+}
+
+:root {
+  color-scheme: dark;
+  background: #050815;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(59, 130, 246, 0.14), transparent 32rem),
+    radial-gradient(circle at 85% 18%, rgba(34, 211, 238, 0.10), transparent 28rem),
+    #050815;
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.28);
+  color: white;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, black, transparent 88%);
+}
+
+.glass {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.52));
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.glow-border {
+  position: relative;
+}
+
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(96, 165, 250, .65), rgba(34, 211, 238, .12), rgba(167, 139, 250, .5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #ffffff 0%, #bfdbfe 40%, #67e8f9 75%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.code-line::before {
+  content: attr(data-line);
+  display: inline-block;
+  width: 2rem;
+  margin-right: .75rem;
+  color: #475569;
+  text-align: right;
+  user-select: none;
+}
+
+.section-kicker {
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
