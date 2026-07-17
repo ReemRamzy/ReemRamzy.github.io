@@ -1,18 +1,3 @@
-<!--
-========================================================================
-PORTFOLIO README
-Replace the following values before publishing:
-
-YOUR_GITHUB_USERNAME
-YOUR_LINKEDIN_USERNAME
-YOUR_EMAIL@example.com
-
-Optional:
-1. Upload your CV to: assets/Reem-Ramzy-Mohammed-CV.pdf
-2. Replace or remove any project link you do not want to publish.
-========================================================================
--->
-
 <div align="center">
 
 <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=240&color=0:0f172a,50:1d4ed8,100:38bdf8&text=Reem%20Ramzy%20Mohammed&fontColor=ffffff&fontSize=42&fontAlignY=37&desc=Full-Stack%20Developer%20%7C%20Laravel%20%7C%20Real-Time%20Systems&descAlignY=58&animation=fadeIn" alt="Reem Ramzy Mohammed — Full-Stack Developer" />
@@ -32,13 +17,13 @@ Optional:
 
 <br /><br />
 
-<a href="https://YOUR_GITHUB_USERNAME.github.io">
+<a href="https://reemramzy.github.io">
   <img src="https://img.shields.io/badge/Portfolio-Visit_Website-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Portfolio Website" />
 </a>
-<a href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME/">
+<a href="https://www.linkedin.com/in/reem-ramzy-moh/">
   <img src="https://img.shields.io/badge/LinkedIn-Connect-0a66c2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
 </a>
-<a href="mailto:YOUR_EMAIL@example.com">
+<a href="mailto:reemramzym@gmail.com">
   <img src="https://img.shields.io/badge/Email-Contact_Me-ea4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
 </a>
 <a href="./assets/Reem-Ramzy-Mohammed-CV.pdf">
@@ -105,8 +90,8 @@ My commercial experience covers products in **transportation, home services, con
 
 | Backend Development | Real-Time & Infrastructure | Frontend & Platforms |
 |---|---|---|
-| Laravel and PHP | Laravel Reverb | JavaScript |
-| Python and Django | WebSockets | HTML and CSS |
+| Laravel and PHP | Laravel Reverb | JavaScript, VueJs, ReactJs |
+| Python and Django | WebSockets | HTML,CSS and tailwind |
 | REST API development | Linux server deployment | Bootstrap |
 | MySQL and database design | Supervisor process management | WordPress |
 | Third-party API integration | Debugging and production support | Responsive interfaces |
