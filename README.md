@@ -409,13 +409,13 @@ I am open to **Backend**, **Laravel**, and **Full-Stack Development** opportunit
 
 <br />
 
-<a href="mailto:YOUR_EMAIL@example.com">
+<a href="mailto:reemramzym@gmail.com">
   <img src="https://img.shields.io/badge/Send_an_Email-ea4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Send an email" />
 </a>
-<a href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME/">
+<a href="https://www.linkedin.com/in/https://www.linkedin.com/in/reem-ramzy-moh/">
   <img src="https://img.shields.io/badge/Connect_on_LinkedIn-0a66c2?style=for-the-badge&logo=linkedin&logoColor=white" alt="Connect on LinkedIn" />
 </a>
-<a href="https://github.com/YOUR_GITHUB_USERNAME">
+<a href="https://github.com/ReemRamzy/ReemRamzy">
   <img src="https://img.shields.io/badge/Follow_on_GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Follow on GitHub" />
 </a>
 
