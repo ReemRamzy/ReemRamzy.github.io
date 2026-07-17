@@ -198,7 +198,7 @@ const experience = [
   {
     role: 'Senior Full Stack Developer',
     company: 'Nahr Development',
-    period: '2024 — Present',
+    period: '2024 — 2026',
     text: 'Building web applications and mobile backends, real-time logistics features, payment systems, AI integrations, dashboards, cloud deployments, and production support while leading assigned technical work.',
   },
   {
@@ -310,13 +310,13 @@ const experience = [
           </div>
           <div class="overflow-x-auto p-5 font-mono text-[13px] leading-7 sm:p-7 sm:text-sm">
             <p class="code-line text-violet-300" data-line="1">interface ProductionSystem &#123;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="2"><span class="text-blue-300">backend</span>: Laravel |
+            <p class="code-line pl-4 text-slate-300" data-line="2"><span class="text-blue-300">backend framework</span>: Laravel |
               Django;</p>
             <p class="code-line pl-4 text-slate-300" data-line="3"><span class="text-blue-300">clients</span>: Vue |
-              React | Mobile;</p>
+              React | Mobile Apps;</p>
             <p class="code-line pl-4 text-slate-300" data-line="4"><span class="text-cyan-300">realtime</span>: Reverb +
               WebSockets;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="5"><span class="text-cyan-300">data</span>: MySQL +
+            <p class="code-line pl-4 text-slate-300" data-line="5"><span class="text-cyan-300">data</span>: MySQL | MongoDB | postgres +
               Redis;</p>
             <p class="code-line pl-4 text-slate-300" data-line="6"><span class="text-amber-300">payments</span>:
               Transactions + Wallets;</p>
