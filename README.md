@@ -1,6 +1,3 @@
----
-layout: null
----
 
 <!--
   Reem Ramzy Mohammed - GitHub Profile Portfolio
