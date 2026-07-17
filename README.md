@@ -97,21 +97,6 @@ My commercial experience covers products in **transportation, home services, con
 | Third-party API integration | Debugging and production support | Responsive interfaces |
 | Legacy-code refactoring | Git and GitHub | Custom admin dashboards |
 
----
-
-## How My Real-Time Systems Work
-
-```mermaid
-flowchart LR
-    A["Customer App"] <-->|"Requests & live updates"| B["Laravel API"]
-    B <-->|"Events"| C["Laravel Reverb"]
-    C <-->|"Bidirectional communication"| D["Service Provider App"]
-    C <-->|"Live operations"| E["Admin Dashboard"]
-    B <--> F[("MySQL Database")]
-    G["Supervisor"] -->|"Keeps process running"| C
-```
-
-This architecture allows customers, service providers, and administrators to see request changes immediately while **Supervisor** keeps the real-time service running reliably on the production server.
 
 ---
 
@@ -313,7 +298,7 @@ This architecture allows customers, service providers, and administrators to see
       <ul>
         <li>Developed and configured the resort's WordPress website.</li>
         <li>Organized accommodation, facility, and hospitality content.</li>
-        <li>Implemented the website's booking and reservation workflow.</li>
+        <li>Implemented the website's booking and reservation workflow./li>
         <li>Created responsive pages for visitors across desktop and mobile devices.</li>
       </ul>
       <p>
@@ -321,14 +306,6 @@ This architecture allows customers, service providers, and administrators to see
         <code>Booking Workflow</code>
         <code>Responsive Design</code>
         <code>Content Management</code>
-      </p>
-      <p align="center">
-        <a href="https://veneciaresort.com/">
-          <img src="https://img.shields.io/badge/Resort_Website-Visit-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Venecia Resort website" />
-        </a>
-        <a href="https://www.booking.com/hotel/eg/venecia-resort-fayoum.html">
-          <img src="https://img.shields.io/badge/Booking.com-View_Property-003580?style=for-the-badge&logo=bookingdotcom&logoColor=white" alt="Venecia Resort on Booking.com" />
-        </a>
       </p>
     </td>
   </tr>
