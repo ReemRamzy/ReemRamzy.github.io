@@ -1,3 +1,7 @@
+---
+layout: null
+---
+
 <!--
   Reem Ramzy Mohammed - GitHub Profile Portfolio
   Commercial project source code is private and is not included in this repository.
