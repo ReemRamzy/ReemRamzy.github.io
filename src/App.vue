@@ -547,7 +547,6 @@ const experience = [
       <div
         class="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-5 text-sm text-slate-500 sm:flex-row lg:px-8">
         <p>© {{ new Date().getFullYear() }} Reem Ramzy Mohammed.</p>
-        <p>Designed as a production-focused full-stack portfolio.</p>
       </div>
     </footer>
   </main>
