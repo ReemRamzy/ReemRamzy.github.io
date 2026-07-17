@@ -361,8 +361,6 @@ const experience = [
           <p class="section-kicker text-xs font-bold text-blue-300">Technical expertise</p>
           <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">A stack designed around complete
             business workflows.</h2>
-          <p class="mt-5 text-lg leading-8 text-slate-400">The portfolio presents skills as connected engineering
-            capabilities rather than a wall of technology badges.</p>
         </div>
 
         <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -385,37 +383,7 @@ const experience = [
         </div>
       </div>
     </section>
-
-    <section class="mx-auto max-w-7xl px-5 py-24 lg:px-8">
-      <div class="glass glow-border grid items-center gap-8 rounded-3xl p-7 lg:grid-cols-[.65fr_1.35fr] lg:p-10">
-        <div>
-          <p class="section-kicker text-xs font-bold text-cyan-300">Real-time architecture</p>
-          <h2 class="mt-4 text-3xl font-black text-white">One event, every interface updated.</h2>
-          <p class="mt-4 leading-7 text-slate-400">A production pattern used across customer, provider, and
-            administrative workflows.</p>
-        </div>
-        <div class="grid gap-3 sm:grid-cols-5 sm:items-center">
-          <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-            <Smartphone class="mx-auto text-blue-300" />
-            <p class="mt-2 text-sm font-semibold">Customer</p>
-          </div>
-          <div class="text-center text-cyan-400">
-            <Zap class="mx-auto rotate-90 sm:rotate-0" />
-          </div>
-          <div class="rounded-xl border border-cyan-300/20 bg-cyan-400/10 p-4 text-center">
-            <Radio class="mx-auto text-cyan-300" />
-            <p class="mt-2 text-sm font-semibold">Reverb</p>
-          </div>
-          <div class="text-center text-cyan-400">
-            <Zap class="mx-auto rotate-90 sm:rotate-0" />
-          </div>
-          <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-            <Boxes class="mx-auto text-violet-300" />
-            <p class="mt-2 text-sm font-semibold">Provider & Admin</p>
-          </div>
-        </div>
-      </div>
-    </section>
+ 
 
     <section id="projects" class="scroll-mt-24 py-24">
       <div class="mx-auto max-w-7xl px-5 lg:px-8">
