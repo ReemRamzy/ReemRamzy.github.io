@@ -1,520 +1,277 @@
 <script setup>
-import { ref } from 'vue'
-import {
-  ArrowUpRight,
-  Boxes,
-  BriefcaseBusiness,
-  Check,
-  CloudCog,
-  Code2,
-  Database,
-  ExternalLink,
-  GitFork,
-  Mail,
-  Menu,
-  Radio,
-  ServerCog,
-  Smartphone,
-  Sparkles,
-  WalletCards,
-  X,
-  Zap,
-} from '@lucide/vue'
+import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { ArrowDown, ArrowUpRight, Mail, Menu, X } from '@lucide/vue'
+import ArchitectureGraph from './components/ArchitectureGraph.vue'
+import ContactPanel from './components/ContactPanel.vue'
+import ProjectShowcase from './components/ProjectShowcase.vue'
+import SectionHeading from './components/SectionHeading.vue'
+import SkillSystem from './components/SkillSystem.vue'
+import { experience, projects } from './data/portfolio'
 
 const menuOpen = ref(false)
+const SystemMap = defineAsyncComponent(() => import('./components/SystemMap.vue'))
+const activeSection = ref('about')
+const main = ref(null)
+let revealObserver
+let sectionObserver
+let pointerFrame
 
 const navigation = [
   ['About', '#about'],
+  ['Architecture', '#architecture'],
   ['Expertise', '#expertise'],
   ['Projects', '#projects'],
   ['Experience', '#experience'],
   ['Contact', '#contact'],
 ]
 
-const expertise = [
-  {
-    icon: ServerCog,
-    title: 'Backend Architecture',
-    accent: 'from-blue-500/25 to-cyan-400/5',
-    text: 'Laravel and Django services, REST and GraphQL APIs, authentication, queues, scheduled jobs, and modular architecture.',
-    tags: ['Laravel', 'PHP 8+', 'Python', 'Django', 'REST', 'GraphQL'],
+const vReveal = {
+  mounted(element) {
+    element.dataset.reveal = ''
   },
-  {
-    icon: Radio,
-    title: 'Real-Time Systems',
-    accent: 'from-cyan-400/20 to-blue-500/5',
-    text: 'Live tracking, status updates, chat, notifications, private channels, presence channels, and operational dashboards.',
-    tags: ['Reverb', 'WebSockets', 'Broadcasting', 'Live Tracking'],
-  },
-  {
-    icon: WalletCards,
-    title: 'Fintech & Payments',
-    accent: 'from-violet-500/20 to-fuchsia-400/5',
-    text: 'Transaction processing, wallets, payment gateways, refunds, pricing rules, discount logic, and financial reports.',
-    tags: ['Payments', 'Wallets', 'Refunds', 'Transactions'],
-  },
-  {
-    icon: Sparkles,
-    title: 'AI Integrations',
-    accent: 'from-fuchsia-500/20 to-violet-500/5',
-    text: 'Chatbots, OCR, document extraction, speech-to-text, image and video analysis, structured outputs, and automation.',
-    tags: ['AI APIs', 'OCR', 'Speech', 'Automation'],
-  },
-  {
-    icon: CloudCog,
-    title: 'Cloud & Production',
-    accent: 'from-sky-500/20 to-blue-500/5',
-    text: 'AWS EC2, Linux, Docker, Nginx, SSL, Supervisor, GitHub Actions, monitoring, debugging, and deployment support.',
-    tags: ['AWS', 'Docker', 'Linux', 'CI/CD', 'Supervisor'],
-  },
-  {
-    icon: Code2,
-    title: 'Frontend Engineering',
-    accent: 'from-emerald-500/15 to-cyan-400/5',
-    text: 'Responsive interfaces and admin dashboards using Vue, Nuxt, React, Next, JavaScript, Tailwind CSS, and Bootstrap.',
-    tags: ['Vue', 'Nuxt', 'React', 'Next.js', 'Tailwind'],
-  },
-]
+}
 
-const projects = [
-  {
-    name: 'CarBreak',
-    type: 'Real-Time Vehicle Services Platform',
-    icon: 'CB',
-    gradient: 'from-blue-500 to-cyan-400',
-    description: 'An on-demand platform for valet parking, car washing, vehicle covering, and related vehicle services.',
-    contribution: [
-      'Built the complete bidirectional Laravel Reverb workflow.',
-      'Connected customer, provider, and admin experiences with live events.',
-      'Configured Supervisor for continuously running Reverb and workers.',
-      'Developed a real-time operations, clients, employees, and reporting dashboard.',
-    ],
-    tags: ['Laravel', 'Reverb', 'WebSockets', 'Supervisor', 'MySQL'],
-    links: [
-      ['Website', 'https://carbreak.nahrdev.com/'],
-      ['Customer app', 'https://play.google.com/store/apps/details?id=com.nahr.carbrake'],
-      ['Provider app', 'https://play.google.com/store/apps/details?id=com.nahr.car_brake_provider'],
-    ],
-  },
-  {
-    name: 'TaNefer Tours',
-    type: 'Tourism & Hotel Reservation Platform',
-    icon: 'TN',
-    gradient: 'from-violet-500 to-blue-500',
-    description: 'A full-service travel platform covering hotels, flights, Nile cruises, tours, and customized trips.',
-    contribution: [
-      'Refactored a legacy full-stack codebase.',
-      'Improved critical workflow structure, maintainability, and stability.',
-      'Implemented a complete hotel reservation cycle with GTE.',
-      'Covered search, availability, selection, booking, and confirmation.',
-    ],
-    tags: ['Laravel', 'PHP', 'GTE API', 'Refactoring', 'Booking'],
-    links: [['Live platform', 'https://www.tanefer.com/']],
-  },
-  {
-    name: 'ASAD',
-    type: 'Construction Project Management',
-    icon: 'AS',
-    gradient: 'from-amber-500 to-orange-400',
-    description: 'A client-facing construction platform for project progress, plans, documents, invoices, and updates.',
-    contribution: [
-      'Developed the custom administrative dashboard.',
-      'Connected the mobile client application to the admin workflow.',
-      'Centralized project stages, documents, updates, and operational data.',
-      'Built controls for information displayed to clients.',
-    ],
-    tags: ['Laravel', 'Dashboard', 'MySQL', 'Mobile API'],
-    links: [['App Store', 'https://apps.apple.com/us/app/asad/id6780917942']],
-  },
-  {
-    name: 'Motah',
-    type: 'Real-Time Home Services Platform',
-    icon: 'MO',
-    gradient: 'from-emerald-500 to-cyan-400',
-    description: 'A platform connecting customers with technicians for electrical, plumbing, AC, cleaning, and other services.',
-    contribution: [
-      'Implemented the full Laravel Reverb communication cycle.',
-      'Enabled customer, technician, and admin bidirectional updates.',
-      'Delivered immediate request and service-status synchronization.',
-      'Configured Supervisor for production stability.',
-    ],
-    tags: ['Laravel', 'Reverb', 'WebSockets', 'Supervisor'],
-    links: [
-      ['Customer app', 'https://play.google.com/store/apps/details?id=com.nahrdev.motah'],
-      ['Worker app', 'https://play.google.com/store/apps/details?id=com.nahrdev.etqan'],
-    ],
-  },
-  {
-    name: 'Move Now',
-    type: 'Real-Time Transportation Platform',
-    icon: 'MN',
-    gradient: 'from-sky-500 to-blue-500',
-    description: 'A transportation platform supporting requests, provider assignment, location-aware workflows, pricing, and live status.',
-    contribution: [
-      'Implemented the full real-time request cycle with Reverb.',
-      'Connected customers, drivers or providers, and administrators.',
-      'Supported live status changes across the transport workflow.',
-      'Configured Supervisor for reliable server processes.',
-    ],
-    tags: ['Laravel', 'Reverb', 'Location', 'Supervisor'],
-    links: [['Google Play', 'https://play.google.com/store/apps/details?id=com.nahrdev.move_now']],
-  },
-  {
-    name: 'Fastich POS',
-    type: 'Cloud Point-of-Sale System',
-    icon: 'FP',
-    gradient: 'from-fuchsia-500 to-violet-500',
-    description: 'A cloud POS platform for restaurants, cafés, food trucks, and retail businesses.',
-    contribution: [
-      'Debugged and maintained the production application.',
-      'Investigated reported defects and identified technical causes.',
-      'Implemented fixes without disrupting business-critical workflows.',
-      'Supported ongoing application stability and maintenance.',
-    ],
-    tags: ['Debugging', 'Maintenance', 'POS', 'Production'],
-    links: [
-      ['Website', 'https://fastich.com/en/'],
-      ['Google Play', 'https://play.google.com/store/apps/details?id=com.fastich.pos_flutter'],
-    ],
-  },
-  {
-    name: 'Venecia Resort',
-    type: 'WordPress Booking Website',
-    icon: 'VR',
-    gradient: 'from-cyan-500 to-teal-400',
-    description: 'A hospitality website presenting resort accommodation, facilities, and reservation information.',
-    contribution: [
-      'Developed and configured the WordPress website.',
-      'Organized accommodation and hospitality content.',
-      'Implemented the booking and reservation workflow.',
-      'Built responsive desktop and mobile pages.',
-    ],
-    tags: ['WordPress', 'Booking', 'Responsive UI', 'CMS'],
-    links: [],
-  },
-]
+function updatePointer(event) {
+  if (window.matchMedia('(pointer: coarse)').matches) return
+  cancelAnimationFrame(pointerFrame)
+  pointerFrame = requestAnimationFrame(() => {
+    const bounds = main.value.getBoundingClientRect()
+    main.value.style.setProperty('--pointer-x', `${event.clientX - bounds.left}px`)
+    main.value.style.setProperty('--pointer-y', `${event.clientY - bounds.top}px`)
+  })
+}
 
-const experience = [
-  {
-    role: 'Senior Full Stack Developer',
-    company: 'Nahr Development',
-    period: '2024 — 2026',
-    text: 'Building web applications and mobile backends, real-time logistics features, payment systems, AI integrations, dashboards, cloud deployments, and production support while leading assigned technical work.',
-  },
-  {
-    role: 'Freelance Full Stack Developer',
-    company: 'Remote',
-    period: '2022 — 2024',
-    text: 'Delivered Laravel, Vue, PHP, and WordPress applications from requirements and technical planning through deployment, integration, and maintenance.',
-  },
-  {
-    role: 'Back-End Developer',
-    company: 'Altatawwar Company',
-    period: '2018 — 2019',
-    text: 'Developed PHP and MySQL backend functionality, optimized schemas and queries, integrated APIs, supported deployments, and resolved production issues.',
-  },
-]
+onMounted(() => {
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed')
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.12 })
+    document.querySelectorAll('[data-reveal]').forEach((element) => revealObserver.observe(element))
+  }
+
+  sectionObserver = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting).sort(
+      (a, b) => b.intersectionRatio - a.intersectionRatio,
+    )
+    if (visible[0]) activeSection.value = visible[0].target.id
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.2, 0.5] })
+  document.querySelectorAll('main section[id]').forEach((section) => sectionObserver.observe(section))
+})
+
+onBeforeUnmount(() => {
+  revealObserver?.disconnect()
+  sectionObserver?.disconnect()
+  cancelAnimationFrame(pointerFrame)
+})
 </script>
 
 <template>
-  <main class="overflow-hidden">
-    <div class="grid-bg pointer-events-none fixed inset-0 -z-10"></div>
+  <main ref="main" class="site-shell" @pointermove="updatePointer">
+    <div class="ambient-grid pointer-events-none fixed inset-0 -z-10"></div>
+    <div class="pointer-aura pointer-events-none fixed inset-0 -z-10" aria-hidden="true"></div>
 
-    <header class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-ink-950/70 backdrop-blur-xl">
-      <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8"
+    <header class="site-header fixed inset-x-0 top-0 z-50">
+      <nav class="mx-auto flex max-w-[90rem] items-center justify-between px-5 py-3 lg:px-10"
         aria-label="Primary navigation">
-        <a href="#" class="group flex items-center gap-3 font-semibold text-white">
-          <span
-            class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 text-sm font-black text-white shadow-lg shadow-blue-500/20">RR</span>
-          <span>Reem Ramzy<span class="text-cyan-400">.</span></span>
+        <a href="#" class="brand group flex items-center gap-3 font-semibold text-white">
+          <span class="brand__mark">RR</span>
+          <span class="brand__name">Reem Ramzy<span>.</span></span>
         </a>
 
-        <div class="hidden items-center gap-7 text-sm text-slate-300 md:flex">
-          <a v-for="item in navigation" :key="item[0]" :href="item[1]" class="transition hover:text-white">{{ item[0]
-            }}</a>
+        <div class="desktop-navigation hidden items-center gap-6 text-sm md:flex">
+          <a v-for="item in navigation" :key="item[0]" :href="item[1]"
+            :class="{ 'desktop-navigation__link--active': activeSection === item[1].slice(1) }"
+            :aria-current="activeSection === item[1].slice(1) ? 'location' : undefined">
+            {{ item[0] }}
+          </a>
         </div>
 
         <a href="./Reem-Ramzy-Senior-Full-Stack-Engineer.pdf"
-          class="hidden rounded-xl border border-blue-400/25 bg-blue-500/10 px-4 py-2 text-sm font-semibold text-blue-200 transition hover:border-blue-300/50 hover:bg-blue-500/20 md:block">
-          View résumé
+          class="resume-link hidden md:inline-flex">
+          Résumé <ArrowUpRight :size="14" />
         </a>
 
-        <button class="rounded-lg border border-white/10 p-2 text-slate-200 md:hidden" @click="menuOpen = !menuOpen"
-          aria-label="Toggle navigation">
+        <button class="mobile-menu-button rounded-lg md:hidden"
+          @click="menuOpen = !menuOpen" aria-label="Toggle navigation" aria-controls="mobile-navigation"
+          :aria-expanded="menuOpen">
           <X v-if="menuOpen" :size="20" />
           <Menu v-else :size="20" />
         </button>
       </nav>
 
-      <div v-if="menuOpen" class="border-t border-white/5 bg-ink-950 px-5 py-5 md:hidden">
+      <div v-if="menuOpen" id="mobile-navigation" class="border-t border-white/5 bg-ink-950 px-5 py-5 md:hidden">
         <div class="flex flex-col gap-4">
           <a v-for="item in navigation" :key="item[0]" :href="item[1]" class="text-slate-300"
             @click="menuOpen = false">{{ item[0] }}</a>
-          <a href="./Reem-Ramzy-Senior-Full-Stack-Engineer.pdf" class="font-semibold text-cyan-300">View résumé</a>
+          <a href="./Reem-Ramzy-Senior-Full-Stack-Engineer.pdf" class="font-semibold text-cyan-300">View résumé <ArrowUpRight :size="14" /></a>
         </div>
       </div>
     </header>
 
     <section
-      class="relative mx-auto grid min-h-screen max-w-7xl items-center gap-14 px-5 pb-24 pt-32 lg:grid-cols-[1.05fr_.95fr] lg:px-8 lg:pt-24">
-      <div>
+      class="hero relative mx-auto grid min-h-screen max-w-[90rem] items-center gap-10 px-5 pb-20 pt-32 lg:grid-cols-[1.02fr_.98fr] lg:px-10 lg:pt-24">
+      <div class="hero__copy relative z-10" v-reveal>
         <div
-          class="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-400/5 px-4 py-2 text-sm text-cyan-200">
-          <span class="relative flex h-2 w-2">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75"></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-cyan-400"></span>
-          </span>
-          Open to senior full-stack opportunities
+          class="availability mb-8 inline-flex items-center gap-2">
+          <span class="availability__signal"></span>
+          OPEN TO SENIOR FULL-STACK OPPORTUNITIES
         </div>
 
-        <p class="section-kicker mb-4 text-xs font-bold text-blue-300">Senior Full Stack Engineer</p>
-        <h1 class="max-w-4xl text-5xl font-black leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
-          I engineer the systems
-          <span class="text-gradient">behind the interface.</span>
+        <p class="eyebrow mb-5">FULL STACK ENGINEER <span>·</span> SYSTEMS THINKER</p>
+        <h1 class="hero__title">
+          I build the
+          <span>systems</span>
+          <span class="hero__title-outline">behind everything.</span>
         </h1>
-        <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-300">
-          Building production applications across backend architecture, real-time workflows, fintech, dashboards, AI
-          integrations, and cloud deployment using Laravel, PHP, Python, Vue, and React.
+        <p class="hero__intro">
+          From interface to infrastructure, I connect application engineering, backend architecture, real-time systems, and Applied AI into products built for the real world.
         </p>
 
-        <div class="mt-9 flex flex-wrap gap-3">
-          <a href="#projects"
-            class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 px-5 py-3 font-bold text-white shadow-xl shadow-blue-500/20 transition hover:-translate-y-0.5">
-            Explore projects
+        <div class="hero__actions">
+          <a href="#projects" class="button-primary">
+            Explore selected work
             <ArrowUpRight :size="18" />
           </a>
-          <a href="mailto:reemramzym@gmail.com"
-            class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-slate-200 transition hover:bg-white/10">
-            <Mail :size="18" /> Contact me
+          <a href="mailto:reemramzym@gmail.com" class="button-quiet">
+            <Mail :size="16" /> Start a conversation
           </a>
         </div>
 
-        <div class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-slate-400">
-          <span>Alexandria, Egypt</span>
-          <span class="hidden h-1 w-1 rounded-full bg-slate-600 sm:block"></span>
-          <span>Arabic — Native</span>
-          <span class="hidden h-1 w-1 rounded-full bg-slate-600 sm:block"></span>
-          <span>English — Fluent</span>
+        <div class="hero__metadata">
+          <span>Alexandria, Egypt</span><i></i><span>Arabic — Native</span><i></i><span>English — Fluent</span>
         </div>
       </div>
 
-      <div class="glow-border glass relative rounded-3xl p-3 sm:p-5">
-        <div class="overflow-hidden rounded-2xl border border-white/8 bg-[#080d1b]">
-          <div class="flex items-center justify-between border-b border-white/8 px-5 py-4">
-            <div class="flex gap-2">
-              <span class="h-3 w-3 rounded-full bg-rose-400/80"></span>
-              <span class="h-3 w-3 rounded-full bg-amber-300/80"></span>
-              <span class="h-3 w-3 rounded-full bg-emerald-400/80"></span>
-            </div>
-            <span class="font-mono text-xs text-slate-500">system-architecture.ts</span>
-          </div>
-          <div class="overflow-x-auto p-5 font-mono text-[13px] leading-7 sm:p-7 sm:text-sm">
-            <p class="code-line text-violet-300" data-line="1">interface ProductionSystem &#123;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="2"><span class="text-blue-300">backend framework</span>: Laravel |
-              Django;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="3"><span class="text-blue-300">clients</span>: Vue |
-              React | Mobile Apps;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="4"><span class="text-cyan-300">realtime</span>: Reverb +
-              WebSockets;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="5"><span class="text-cyan-300">data</span>: MySQL | MongoDB | postgres +
-              Redis;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="6"><span class="text-amber-300">payments</span>:
-              Transactions + Wallets;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="7"><span class="text-fuchsia-300">intelligence</span>:
-              AI APIs + OCR;</p>
-            <p class="code-line pl-4 text-slate-300" data-line="8"><span class="text-emerald-300">delivery</span>:
-              Docker + AWS + CI/CD;</p>
-            <p class="code-line text-violet-300" data-line="9">&#125;</p>
-            <p class="code-line mt-4 text-slate-500" data-line="10">// Reliable from request to production.</p>
+      <div class="hero__scene-wrap" v-reveal>
+        <div class="hero__scene-chrome">
+          <div><span class="live-dot"></span> SYSTEM TOPOLOGY <span class="hero__scene-dim">/ 01</span></div>
+          <span class="hero__scene-coordinate">31°12' N&nbsp; 29°55' E</span>
+        </div>
+        <div class="hero__scene-frame">
+          <div class="hero__scene-light" aria-hidden="true"></div>
+          <SystemMap />
+          <div class="hero__scene-legend">
+            <span><i class="legend-dot legend-dot--blue"></i>APPLICATION</span>
+            <span><i class="legend-dot legend-dot--violet"></i>INTELLIGENCE</span>
+            <span><i class="legend-dot legend-dot--green"></i>INFRASTRUCTURE</span>
           </div>
         </div>
+        <div class="hero__scene-foot">
+          <span>END-TO-END ENGINEERING</span>
+          <span>FROM REQUEST <i></i> TO PRODUCTION</span>
+        </div>
+      </div>
+      <a href="#about" class="hero__scroll" aria-label="Scroll to learn more">
+        <span>SCROLL TO EXPLORE</span><ArrowDown :size="14" />
+      </a>
+    </section>
 
-        <div
-          class="absolute -bottom-6 -left-5 hidden rounded-2xl border border-blue-300/15 bg-blue-500/10 px-5 py-4 backdrop-blur-xl sm:block">
-          <p class="text-xs font-bold uppercase tracking-[.18em] text-blue-300">Core approach</p>
-          <p class="mt-1 font-semibold text-white">Business flow → architecture → delivery</p>
+    <div class="story-bridge" aria-hidden="true">
+      <span>01</span><i></i><span>ENGINEERING COMPLETE SYSTEMS</span><i></i><span>APPLICATION → OPERATIONS → INTELLIGENCE</span>
+    </div>
+
+    <section id="about" class="content-section mx-auto max-w-[90rem] scroll-mt-24 px-5 py-24 lg:px-10 lg:py-32">
+      <div class="about-layout" v-reveal>
+        <div class="about-heading">
+          <p class="eyebrow"><span>01 /</span> ABOUT</p>
+          <h2>Built to connect the <span class="text-gradient">whole picture.</span></h2>
+        </div>
+        <div class="about-copy">
+          <p class="about-lead">I develop scalable web applications, mobile backends, fintech systems, logistics platforms, and real-time products, connecting frontend experiences to backend services, APIs, and data.</p>
+          <div class="about-copy__details">
+            <p>
+              My work spans system and API design, backend architecture, database performance, real-time workflows, and
+              Applied AI integrations. I also work across Linux infrastructure, deployments, monitoring, troubleshooting,
+              and production maintenance while continuing to deepen my DevOps capabilities.
+            </p>
+            <p>I also lead assigned technical work, review code, support developers, estimate tasks, and coordinate
+              delivery with product, frontend, and QA teams.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="about" class="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 lg:px-8">
-      <div class="grid gap-12 lg:grid-cols-[.72fr_1.28fr]">
-        <div>
-          <p class="section-kicker text-xs font-bold text-cyan-300">About me</p>
-          <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Full-stack ownership, not isolated
-            tickets.</h2>
-        </div>
-        <div class="space-y-5 text-lg leading-8 text-slate-300">
-          <p>I develop scalable web applications, mobile backends, fintech systems, logistics platforms, and real-time
-            products.</p>
-          <p>My work spans API design, backend services, database performance, external integrations, operational
-            dashboards, deployment, incident investigation, and production maintenance.</p>
-          <p>I also lead assigned technical work, review code, support developers, estimate tasks, and coordinate
-            delivery with product, frontend, and QA teams.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="expertise" class="scroll-mt-24 border-y border-white/5 bg-white/[.018] py-24">
-      <div class="mx-auto max-w-7xl px-5 lg:px-8">
-        <div class="max-w-3xl">
-          <p class="section-kicker text-xs font-bold text-blue-300">Technical expertise</p>
-          <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">A stack designed around complete
-            business workflows.</h2>
-        </div>
-
-        <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <article v-for="item in expertise" :key="item.title"
-            class="glass group relative overflow-hidden rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:border-blue-400/25">
-            <div :class="['absolute inset-0 bg-gradient-to-br opacity-80', item.accent]"></div>
-            <div class="relative">
-              <div class="grid h-12 w-12 place-items-center rounded-xl border border-white/10 bg-white/5 text-cyan-200">
-                <component :is="item.icon" :size="23" />
-              </div>
-              <h3 class="mt-5 text-xl font-bold text-white">{{ item.title }}</h3>
-              <p class="mt-3 leading-7 text-slate-400">{{ item.text }}</p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                <span v-for="tag in item.tags" :key="tag"
-                  class="rounded-md border border-white/8 bg-black/10 px-2.5 py-1 text-xs font-medium text-slate-300">{{
-                  tag }}</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
- 
-
-    <section id="projects" class="scroll-mt-24 py-24">
-      <div class="mx-auto max-w-7xl px-5 lg:px-8">
-        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-          <div class="max-w-3xl">
-            <p class="section-kicker text-xs font-bold text-violet-300">Featured production work</p>
-            <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Products where my contribution is
-              visible in the workflow.</h2>
+    <section id="architecture" class="architecture-section scroll-mt-24">
+      <div class="mx-auto max-w-[90rem] px-5 py-24 lg:px-10 lg:py-32">
+        <SectionHeading sequence="02 /" label="SYSTEM ARCHITECTURE"
+          description="My scope spans the complete application lifecycle—from client experience and data through real-time delivery, infrastructure, and AI integrations."
+          v-reveal>
+          Every layer. <span class="text-gradient">One working system.</span>
+        </SectionHeading>
+        <ArchitectureGraph />
+        <div class="capability-progression" v-reveal>
+          <div v-for="(step, index) in ['Full Stack Engineering', 'Real-Time Systems', 'DevOps & Infrastructure', 'Applied AI']"
+            :key="step" class="capability-progression__step">
+            <span>0{{ index + 1 }}</span><strong>{{ step }}</strong>
+            <ArrowUpRight v-if="index < 3" :size="15" aria-hidden="true" />
           </div>
-          <p class="max-w-lg text-sm leading-6 text-slate-500">Commercial source code is private. These case-study cards
-            describe my direct role and link to the public products.</p>
         </div>
+      </div>
+    </section>
 
-        <div class="mt-12 grid gap-6 lg:grid-cols-2">
-          <article v-for="project in projects" :key="project.name"
-            class="glass group rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:border-white/20 sm:p-7">
-            <div class="flex items-start justify-between gap-5">
-              <div class="flex items-center gap-4">
-                <div
-                  :class="['grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br font-black text-white shadow-lg', project.gradient]">
-                  {{ project.icon }}</div>
-                <div>
-                  <h3 class="text-2xl font-black text-white">{{ project.name }}</h3>
-                  <p class="mt-1 text-sm text-slate-400">{{ project.type }}</p>
-                </div>
-              </div>
-              <ArrowUpRight class="text-slate-600 transition group-hover:text-cyan-300" :size="21" />
+    <section id="expertise" class="content-section mx-auto max-w-[90rem] scroll-mt-24 px-5 py-24 lg:px-10 lg:py-32">
+      <SectionHeading sequence="03 /" label="ENGINEERING TOOLKIT"
+        description="Familiar technologies organized around how complete products are designed, built, connected, and operated."
+        class="section-heading--skills" v-reveal>
+        Capabilities, <span class="text-gradient">layer by layer.</span>
+      </SectionHeading>
+      <div class="skills-layout">
+        <div class="skills-context" v-reveal>
+          <p class="skills-context__label">SYSTEM / 06 LAYERS</p>
+          <p class="skills-context__statement">From the <span>first pixel</span> to the <span>production signal.</span></p>
+          <p class="skills-context__note">Hands-on AI application integration, with growing practice in retrieval architecture. DevOps and infrastructure are expanding strengths—not a separate engineering title.</p>
+          <div class="skills-context__status"><span></span> CONTINUOUSLY EXPANDING</div>
+        </div>
+        <SkillSystem />
+      </div>
+    </section>
+
+    <section id="projects" class="projects-section scroll-mt-24">
+      <div class="mx-auto max-w-[90rem] px-5 py-24 lg:px-10 lg:py-32">
+        <SectionHeading sequence="04 /" label="SELECTED PRODUCTION WORK"
+          description="Commercial source code is private. These case studies describe my direct role and link to public products where available."
+          v-reveal>
+          Systems with <span class="text-gradient">real-world stakes.</span>
+        </SectionHeading>
+        <ProjectShowcase :projects="projects" />
+      </div>
+    </section>
+
+    <section id="experience" class="experience-section scroll-mt-24">
+      <div class="mx-auto max-w-[90rem] px-5 py-24 lg:px-10 lg:py-32">
+        <SectionHeading sequence="05 /" label="EXPERIENCE"
+          description="Experience across delivery, support, and technical leadership. Full career details are available in the résumé."
+          v-reveal>
+          Engineering through <span class="text-gradient">every phase.</span>
+        </SectionHeading>
+
+        <div class="experience-list">
+          <article v-for="(item, index) in experience" :key="item.role" class="experience-entry" v-reveal>
+            <span class="experience-entry__index">0{{ index + 1 }}</span>
+            <div class="experience-entry__role">
+              <h3>{{ item.role }}</h3>
+              <p>{{ item.company }}</p>
             </div>
-
-            <p class="mt-6 leading-7 text-slate-300">{{ project.description }}</p>
-
-            <div class="mt-6 border-t border-white/7 pt-5">
-              <p class="text-xs font-bold uppercase tracking-[.16em] text-blue-300">My contribution</p>
-              <ul class="mt-4 space-y-3">
-                <li v-for="point in project.contribution" :key="point"
-                  class="flex gap-3 text-sm leading-6 text-slate-400">
-                  <Check class="mt-1 shrink-0 text-cyan-400" :size="15" />
-                  <span>{{ point }}</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="mt-6 flex flex-wrap gap-2">
-              <span v-for="tag in project.tags" :key="tag"
-                class="rounded-lg bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300">{{ tag }}</span>
-            </div>
-
-            <div v-if="project.links.length" class="mt-6 flex flex-wrap gap-3">
-              <a v-for="link in project.links" :key="link[0]" :href="link[1]" target="_blank" rel="noreferrer"
-                class="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-300 transition hover:text-cyan-200">
-                {{ link[0] }}
-                <ArrowUpRight :size="14" />
-              </a>
-            </div>
+            <p class="experience-entry__description">{{ item.text }}</p>
+            <span class="experience-entry__period">{{ item.period }}</span>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="experience" class="scroll-mt-24 border-y border-white/5 bg-white/[.018] py-24">
-      <div class="mx-auto grid max-w-7xl gap-14 px-5 lg:grid-cols-[.72fr_1.28fr] lg:px-8">
-        <div>
-          <p class="section-kicker text-xs font-bold text-blue-300">Experience</p>
-          <h2 class="mt-4 text-3xl font-black text-white sm:text-4xl">Engineering across delivery, support, and
-            leadership.</h2>
-          <div class="mt-8 flex gap-3">
-            <BriefcaseBusiness class="text-cyan-300" />
-            <p class="text-sm leading-6 text-slate-400">Experience details are intentionally concise here; the full
-              résumé is available as a PDF.</p>
-          </div>
-        </div>
-
-        <div class="relative border-l border-white/10 pl-7">
-          <article v-for="item in experience" :key="item.role" class="relative pb-12 last:pb-0">
-            <span
-              class="absolute -left-[2.1rem] top-1 h-3 w-3 rounded-full border-2 border-ink-950 bg-cyan-400 shadow-[0_0_18px_rgba(34,211,238,.7)]"></span>
-            <div class="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
-              <div>
-                <h3 class="text-xl font-bold text-white">{{ item.role }}</h3>
-                <p class="mt-1 font-medium text-blue-300">{{ item.company }}</p>
-              </div>
-              <span class="font-mono text-xs text-slate-500">{{ item.period }}</span>
-            </div>
-            <p class="mt-4 leading-7 text-slate-400">{{ item.text }}</p>
-          </article>
-        </div>
-      </div>
+    <section id="contact" class="contact-section scroll-mt-24">
+      <ContactPanel v-reveal />
     </section>
 
-    <section id="contact" class="mx-auto max-w-7xl scroll-mt-24 px-5 py-24 lg:px-8">
-      <div
-        class="glow-border overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600/25 via-ink-900 to-violet-600/20 p-8 text-center sm:p-14">
-        <p class="section-kicker text-xs font-bold text-cyan-300">Contact</p>
-        <h2 class="mx-auto mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">Looking for a
-          developer who can own the complete workflow?</h2>
-        <p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">Open to Backend, Laravel, Python, and Full
-          Stack Engineering opportunities.</p>
-
-        <div class="mt-9 flex flex-wrap justify-center gap-3">
-          <!-- Email -->
-          <a href="mailto:reemramzym@gmail.com"
-            class="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300 hover:-translate-y-1">
-            Email Me
-          </a>
-
-          <!-- Phone -->
-          <a href="tel:+201551157579"
-            class="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-6 py-3 font-semibold text-white transition hover:border-cyan-400 hover:-translate-y-1">
-            Call Me
-          </a>
-
-          <!-- WhatsApp -->
-          <a href="https://wa.me/201551157579" target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-6 py-3 font-semibold text-emerald-300 transition hover:bg-emerald-500/20 hover:-translate-y-1">
-            WhatsApp
-          </a> <a href="https://www.linkedin.com/in/reem-ramzy-moh/" target="_blank" rel="noreferrer"
-            class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-white/10">
-            <ExternalLink :size="18" /> LinkedIn
-          </a>
-          <a href="https://github.com/ReemRamzy" target="_blank" rel="noreferrer"
-            class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-white/10">
-            <GitFork :size="18" /> GitHub
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <footer class="border-t border-white/5 py-8">
-      <div
-        class="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-5 text-sm text-slate-500 sm:flex-row lg:px-8">
+    <footer class="site-footer">
+      <div class="mx-auto flex max-w-[90rem] flex-col justify-between gap-3 px-5 py-7 text-xs sm:flex-row lg:px-10">
         <p>© {{ new Date().getFullYear() }} Reem Ramzy Mohammed.</p>
+        <p>ENGINEERED WITH INTENTION <span>·</span> ALEXANDRIA, EGYPT</p>
       </div>
     </footer>
   </main>
