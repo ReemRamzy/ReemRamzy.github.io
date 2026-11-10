@@ -4,7 +4,6 @@ export const projects = [
     type: 'Real-Time Vehicle Services Platform',
     category: 'Mobility · On-demand services',
     icon: 'CB',
-    gradient: 'from-blue-500 to-cyan-400',
     description: 'An on-demand platform for valet parking, car washing, vehicle covering, and related vehicle services.',
     contribution: [
       'Built the complete bidirectional Laravel Reverb workflow.',
@@ -24,7 +23,6 @@ export const projects = [
     type: 'Tourism & Hotel Reservation Platform',
     category: 'Travel · Booking systems',
     icon: 'TN',
-    gradient: 'from-violet-500 to-blue-500',
     description: 'A full-service travel platform covering hotels, flights, Nile cruises, tours, and customized trips.',
     contribution: [
       'Refactored a legacy full-stack codebase.',
@@ -40,7 +38,6 @@ export const projects = [
     type: 'Construction Project Management',
     category: 'Construction · Client platform',
     icon: 'AS',
-    gradient: 'from-amber-500 to-orange-400',
     description: 'A client-facing construction platform for project progress, plans, documents, invoices, and updates.',
     contribution: [
       'Developed the custom administrative dashboard.',
@@ -56,7 +53,6 @@ export const projects = [
     type: 'Real-Time Home Services Platform',
     category: 'Home services · Real-time',
     icon: 'MO',
-    gradient: 'from-emerald-500 to-cyan-400',
     description: 'A platform connecting customers with technicians for electrical, plumbing, AC, cleaning, and other services.',
     contribution: [
       'Implemented the full Laravel Reverb communication cycle.',
@@ -75,7 +71,6 @@ export const projects = [
     type: 'Real-Time Transportation Platform',
     category: 'Mobility · Logistics',
     icon: 'MN',
-    gradient: 'from-sky-500 to-blue-500',
     description: 'A transportation platform supporting requests, provider assignment, location-aware workflows, pricing, and live status.',
     contribution: [
       'Implemented the full real-time request cycle with Reverb.',
@@ -91,7 +86,6 @@ export const projects = [
     type: 'Cloud Point-of-Sale System',
     category: 'Retail · Operations',
     icon: 'FP',
-    gradient: 'from-fuchsia-500 to-violet-500',
     description: 'A cloud POS platform for restaurants, cafés, food trucks, and retail businesses.',
     contribution: [
       'Debugged and maintained the production application.',
@@ -110,7 +104,6 @@ export const projects = [
     type: 'WordPress Booking Website',
     category: 'Hospitality · Booking',
     icon: 'VR',
-    gradient: 'from-cyan-500 to-teal-400',
     description: 'A hospitality website presenting resort accommodation, facilities, and reservation information.',
     contribution: [
       'Developed and configured the WordPress website.',

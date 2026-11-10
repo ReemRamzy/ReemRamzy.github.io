@@ -14,7 +14,7 @@ const layers = [
   {
     name: 'Backend',
     role: 'Services, APIs, and business logic',
-    technologies: ['Laravel', 'PHP', 'Python', 'Django', 'REST', 'GraphQL'],
+    technologies: ['PHP + Laravel', 'Django + Python', 'OOP', 'REST', 'GraphQL'],
     signal: '02 / SERVICES',
     color: 'blue',
   },

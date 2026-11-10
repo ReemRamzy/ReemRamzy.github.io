@@ -1,41 +1,84 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-const selected = ref(1)
+const selected = ref(2)
 
 const systems = [
-  { layer: '01', name: 'Client experience', technologies: 'Vue · React · Mobile apps', color: 'cyan' },
-  { layer: '02', name: 'API surface', technologies: 'REST · GraphQL · Integrations', color: 'blue' },
-  { layer: '03', name: 'Application services', technologies: 'Laravel · Django · Python', color: 'blue' },
-  { layer: '04', name: 'Data & state', technologies: 'MySQL · MongoDB · Redis', color: 'violet' },
-  { layer: '05', name: 'Live events', technologies: 'Reverb · WebSockets · Queues', color: 'cyan' },
-  { layer: '06', name: 'Runtime & delivery', technologies: 'Linux · Docker · AWS · CI/CD', color: 'emerald' },
-  { layer: '07', name: 'Applied intelligence', technologies: 'AI APIs · Retrieval · Automation', color: 'violet' },
+  { layer: '01', name: 'Client experience', technologies: 'Vue · React · Mobile apps', color: 'cyan', point: [20, 19] },
+  { layer: '02', name: 'API surface', technologies: 'REST · GraphQL · Integrations', color: 'blue', point: [73, 31] },
+  { layer: '03', name: 'Application services', technologies: 'PHP + Laravel · Django + Python · OOP', color: 'blue', point: [27, 44] },
+  { layer: '04', name: 'Data & state', technologies: 'MySQL · MongoDB · Redis', color: 'violet', point: [74, 57] },
+  { layer: '05', name: 'Live events', technologies: 'Reverb · WebSockets · Queues', color: 'cyan', point: [27, 70] },
+  { layer: '06', name: 'Runtime & delivery', technologies: 'Linux · Docker · AWS · CI/CD', color: 'emerald', point: [73, 82] },
+  { layer: '07', name: 'Applied intelligence', technologies: 'AI APIs · Retrieval · Automation', color: 'violet', point: [48, 94] },
 ]
+
+const connections = [
+  { from: 0, to: 1, path: 'M 20 19 C 41 16, 51 24, 73 31' },
+  { from: 1, to: 2, path: 'M 73 31 C 78 39, 49 40, 27 44' },
+  { from: 2, to: 3, path: 'M 27 44 C 46 48, 53 53, 74 57' },
+  { from: 3, to: 4, path: 'M 74 57 C 78 65, 50 67, 27 70' },
+  { from: 4, to: 5, path: 'M 27 70 C 45 76, 52 78, 73 82' },
+  { from: 5, to: 6, path: 'M 73 82 C 71 91, 60 91, 48 94' },
+  { from: 2, to: 6, path: 'M 27 44 C 8 61, 31 84, 48 94', secondary: true },
+  { from: 3, to: 6, path: 'M 74 57 C 95 69, 68 88, 48 94', secondary: true },
+]
+
+const activeSystem = computed(() => systems[selected.value])
+
+function selectLayer(index) {
+  selected.value = index
+}
 </script>
 
 <template>
   <div class="architecture-graph">
     <div class="architecture-graph__canvas">
-      <div class="architecture-graph__orbit architecture-graph__orbit--outer" aria-hidden="true"></div>
-      <div class="architecture-graph__orbit architecture-graph__orbit--inner" aria-hidden="true"></div>
-      <div class="architecture-graph__core" aria-hidden="true">
-        <span>APP</span><strong>↔</strong><span>WORLD</span>
-      </div>
       <div class="architecture-graph__coordinates" aria-hidden="true">
         <span>APPLICATION RUNTIME / 07 LAYERS</span>
         <span>SCHEMATIC 01.01</span>
       </div>
-      <span class="architecture-graph__axis architecture-graph__axis--vertical" aria-hidden="true"></span>
-      <span class="architecture-graph__axis architecture-graph__axis--horizontal" aria-hidden="true"></span>
-      <span class="architecture-graph__pulse" aria-hidden="true"></span>
+
+      <svg class="architecture-map" viewBox="0 0 100 100" role="group"
+        aria-label="Interactive application architecture map">
+        <path v-for="(connection, index) in connections" :key="index"
+          :d="connection.path"
+          :class="[
+            'architecture-map__connection',
+            { 'architecture-map__connection--active': !connection.secondary && selected >= connection.to,
+              'architecture-map__connection--secondary': connection.secondary },
+          ]" />
+        <g v-for="(item, index) in systems" :key="item.layer"
+          class="architecture-map__node"
+          :class="[`architecture-map__node--${item.color}`, { 'architecture-map__node--active': selected === index }]"
+          :transform="`translate(${item.point[0]} ${item.point[1]})`"
+          role="button" tabindex="0" :aria-label="`${item.name}: ${item.technologies}`"
+          :aria-pressed="selected === index"
+          @mouseenter="selectLayer(index)" @focus="selectLayer(index)" @click="selectLayer(index)"
+          @keydown.enter.prevent="selectLayer(index)" @keydown.space.prevent="selectLayer(index)">
+          <circle class="architecture-map__node-halo" r="7" />
+          <circle class="architecture-map__node-ring" r="3.3" />
+          <circle class="architecture-map__node-core" r="1.25" />
+          <text y="6.4" text-anchor="middle">{{ item.layer }}</text>
+        </g>
+      </svg>
+
+      <div class="architecture-inspector" aria-live="polite">
+        <span class="architecture-inspector__index">{{ activeSystem.layer }} / 07</span>
+        <div>
+          <strong>{{ activeSystem.name }}</strong>
+          <p>{{ activeSystem.technologies }}</p>
+        </div>
+        <span class="architecture-inspector__signal"><i></i> ACTIVE LAYER</span>
+      </div>
     </div>
 
-    <div class="architecture-graph__layers" role="list" aria-label="Application architecture layers">
+    <div class="architecture-graph__layers" role="group" aria-label="Application architecture layers">
       <button v-for="(item, index) in systems" :key="item.layer" type="button"
-        class="architecture-node" :class="[`architecture-node--${item.color}`, { 'architecture-node--active': selected === index }]"
-        :aria-pressed="selected === index" @mouseenter="selected = index" @focus="selected = index"
-        @click="selected = index">
+        class="architecture-node"
+        :class="[`architecture-node--${item.color}`, { 'architecture-node--active': selected === index }]"
+        :aria-pressed="selected === index"
+        @mouseenter="selectLayer(index)" @focus="selectLayer(index)" @click="selectLayer(index)">
         <span class="architecture-node__number">{{ item.layer }}</span>
         <span class="architecture-node__copy">
           <span class="architecture-node__name">{{ item.name }}</span>
@@ -43,8 +86,8 @@ const systems = [
         </span>
         <span class="architecture-node__point" aria-hidden="true"></span>
       </button>
+      <p class="architecture-graph__hint"><span></span> Select a layer to trace its connections</p>
     </div>
-    <p class="architecture-graph__hint"><span></span> Select a layer to trace its place in the system</p>
   </div>
 </template>
 
@@ -59,68 +102,24 @@ const systems = [
 .architecture-graph__canvas {
   position: relative;
   display: grid;
+  min-width: 0;
   min-height: 480px;
-  aspect-ratio: .92;
-  place-items: center;
+  grid-template-rows: minmax(0, 1fr) auto;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, .12);
-  border-radius: 50% 50% 1.4rem 1.4rem;
+  border-radius: 48% 48% 1.2rem 1.2rem;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(37, 99, 235, .15), transparent 60%),
+    radial-gradient(ellipse at 50% 47%, rgba(37, 99, 235, .15), transparent 60%),
     linear-gradient(rgba(148, 163, 184, .04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, .04) 1px, transparent 1px),
     rgba(7, 13, 27, .7);
   background-size: auto, 32px 32px, 32px 32px, auto;
 }
 
-.architecture-graph__orbit {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border: 1px solid rgba(103, 232, 249, .18);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) rotate(-24deg);
-}
-
-.architecture-graph__orbit--outer {
-  width: 78%;
-  height: 39%;
-  box-shadow: 0 0 44px rgba(34, 211, 238, .07), inset 0 0 30px rgba(59, 130, 246, .06);
-}
-
-.architecture-graph__orbit--inner {
-  width: 58%;
-  height: 29%;
-  border-color: rgba(167, 139, 250, .2);
-  transform: translate(-50%, -50%) rotate(54deg);
-}
-
-.architecture-graph__core {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: .65rem;
-  border: 1px solid rgba(148, 163, 184, .2);
-  border-radius: 999px;
-  background: rgba(6, 12, 26, .8);
-  padding: .7rem 1rem;
-  box-shadow: 0 0 48px rgba(59, 130, 246, .15);
-  color: #94a3b8;
-  font-family: var(--font-mono);
-  font-size: .58rem;
-  letter-spacing: .12em;
-  backdrop-filter: blur(12px);
-}
-
-.architecture-graph__core strong {
-  color: #67e8f9;
-  font-size: 1rem;
-}
-
 .architecture-graph__coordinates {
   position: absolute;
   inset: 1.2rem 1.2rem auto;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   gap: .5rem;
@@ -130,40 +129,63 @@ const systems = [
   letter-spacing: .1em;
 }
 
-.architecture-graph__axis {
-  position: absolute;
-  background: linear-gradient(90deg, transparent, rgba(103, 232, 249, .22), transparent);
+.architecture-map {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  padding: 2.5rem 1rem .35rem;
 }
 
-.architecture-graph__axis--vertical {
-  width: 1px;
-  height: 70%;
-  background: linear-gradient(transparent, rgba(103, 232, 249, .25), transparent);
+.architecture-map__connection {
+  fill: none;
+  stroke: rgba(100, 145, 178, .2);
+  stroke-width: .42;
+  stroke-dasharray: 1.2 1.7;
+  transition: stroke .35s ease, stroke-width .35s ease, opacity .35s ease;
 }
 
-.architecture-graph__axis--horizontal {
-  width: 82%;
-  height: 1px;
+.architecture-map__connection--active {
+  stroke: rgba(103, 232, 249, .7);
+  stroke-width: .72;
+  animation: trace-connection 5s linear infinite;
 }
 
-.architecture-graph__pulse {
-  position: absolute;
-  top: 50%;
-  left: 9%;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #a5f3fc;
-  box-shadow: 0 0 13px 4px rgba(34, 211, 238, .35);
-  animation: orbit-pulse 6s ease-in-out infinite;
+.architecture-map__connection--secondary {
+  stroke: rgba(167, 139, 250, .19);
+  stroke-dasharray: .7 2;
 }
 
-.architecture-graph__layers {
-  position: relative;
+.architecture-map__node { cursor: pointer; outline: none; }
+.architecture-map__node-halo { fill: transparent; transition: fill .3s ease; }
+.architecture-map__node-ring { fill: #0a1020; stroke: #53647b; stroke-width: .48; transition: stroke .3s ease, stroke-width .3s ease; }
+.architecture-map__node-core { fill: #8ca0ba; transition: fill .3s ease; }
+.architecture-map__node text { fill: #758399; font-family: var(--font-mono); font-size: 2.15px; pointer-events: none; }
+.architecture-map__node:hover .architecture-map__node-halo,
+.architecture-map__node--active .architecture-map__node-halo { fill: rgba(34, 211, 238, .12); }
+.architecture-map__node--active .architecture-map__node-ring { stroke: #67e8f9; stroke-width: .8; }
+.architecture-map__node--active .architecture-map__node-core { fill: #cffafe; }
+.architecture-map__node--active text { fill: #cffafe; }
+.architecture-map__node--emerald.architecture-map__node--active .architecture-map__node-ring { stroke: #6ee7b7; }
+.architecture-map__node--violet.architecture-map__node--active .architecture-map__node-ring { stroke: #c4b5fd; }
+
+.architecture-inspector {
   display: grid;
-  gap: .3rem;
+  min-height: 4.5rem;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .7rem;
+  border-top: 1px solid rgba(148, 163, 184, .13);
+  background: linear-gradient(90deg, rgba(255,255,255,.025), rgba(255,255,255,.005));
+  padding: .7rem 1rem;
 }
 
+.architecture-inspector__index { color: #67e8f9; font-family: var(--font-mono); font-size: .58rem; }
+.architecture-inspector strong { display: block; color: #e2e8f0; font-size: .76rem; font-weight: 640; }
+.architecture-inspector p { margin: .25rem 0 0; color: #8290a4; font-family: var(--font-mono); font-size: .55rem; line-height: 1.5; }
+.architecture-inspector__signal { display: flex; align-items: center; gap: .35rem; color: #66758a; font-family: var(--font-mono); font-size: .46rem; white-space: nowrap; }
+.architecture-inspector__signal i { width: .32rem; height: .32rem; border-radius: 50%; background: #6ee7b7; box-shadow: 0 0 8px rgba(110,231,183,.6); }
+
+.architecture-graph__layers { position: relative; display: grid; gap: .3rem; }
 .architecture-graph__layers::before {
   position: absolute;
   z-index: -1;
@@ -212,22 +234,16 @@ const systems = [
   transition: color .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
 
-.architecture-node__copy {
-  display: grid;
-  gap: .3rem;
-}
-
+.architecture-node__copy { display: grid; gap: .3rem; }
 .architecture-node__name { color: #dce5f2; font-size: .87rem; font-weight: 650; }
 .architecture-node__tech { color: #718096; font-family: var(--font-mono); font-size: .62rem; }
 .architecture-node__point { width: .4rem; height: .4rem; border-radius: 50%; background: #334155; transition: background .25s ease, box-shadow .25s ease; }
-
 .architecture-node--active .architecture-node__number { color: #a5f3fc; border-color: rgba(34, 211, 238, .42); box-shadow: 0 0 17px rgba(34, 211, 238, .14); }
 .architecture-node--active .architecture-node__name { color: #fff; }
 .architecture-node--active .architecture-node__point { background: #67e8f9; box-shadow: 0 0 12px rgba(34, 211, 238, .8); }
 
 .architecture-graph__hint {
-  grid-column: 2;
-  margin: -.7rem 0 0;
+  margin: .4rem 0 0;
   color: #64748b;
   font-family: var(--font-mono);
   font-size: .59rem;
@@ -242,20 +258,22 @@ const systems = [
   background: #67e8f9;
 }
 
-@keyframes orbit-pulse {
-  0%, 100% { transform: translate(0, -22px); opacity: .35; }
-  50% { transform: translate(0, 22px); opacity: 1; }
+@keyframes trace-connection {
+  to { stroke-dashoffset: -29; }
 }
 
 @media (max-width: 820px) {
-  .architecture-graph { grid-template-columns: 1fr; gap: 2rem; }
-  .architecture-graph__canvas { width: 100%; min-width: 0; min-height: 0; aspect-ratio: 1.35; border-radius: 1.2rem; }
+  .architecture-graph { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .architecture-graph__canvas { width: 100%; min-height: 0; aspect-ratio: 1.35; border-radius: 1.2rem; }
+  .architecture-map { min-height: 0; }
   .architecture-graph__layers::before { left: 2.25rem; }
-  .architecture-graph__hint { grid-column: 1; }
 }
 
 @media (max-width: 480px) {
-  .architecture-graph__canvas { aspect-ratio: 1.15; }
+  .architecture-graph__canvas { aspect-ratio: 1.05; }
+  .architecture-graph__coordinates { font-size: .4rem; }
+  .architecture-inspector { grid-template-columns: 2.6rem minmax(0, 1fr); padding: .65rem .7rem; }
+  .architecture-inspector__signal { display: none; }
   .architecture-node { grid-template-columns: 2rem minmax(0, 1fr) .4rem; gap: .7rem; padding: .8rem .35rem; }
   .architecture-graph__layers::before { left: 1.35rem; }
   .architecture-node__number { width: 1.8rem; height: 1.8rem; }
@@ -263,7 +281,11 @@ const systems = [
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .architecture-graph__pulse { animation: none; }
+  .architecture-map__connection--active { animation: none; }
+  .architecture-map__connection,
+  .architecture-map__node-halo,
+  .architecture-map__node-ring,
+  .architecture-map__node-core,
   .architecture-node,
   .architecture-node__number,
   .architecture-node__point { transition: none; }
